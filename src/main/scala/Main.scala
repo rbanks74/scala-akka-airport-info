@@ -1,11 +1,13 @@
 import java.util.Calendar
 
+import akka.actor.{Props, ActorSystem}
 import play.api.libs.json.Json._
 import play.api.libs.json.{JsObject, JsString, Json}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 import scala.io.Source
+import actors.IataController
 
 
 object Main extends App {
@@ -31,8 +33,7 @@ object Main extends App {
     cleansedData
   }
 
-  val json = downloadPage(url).map(urlContent => toJsonAndTransform(urlContent))
-  Thread.sleep(2000)
-
+  val iataSystem = ActorSystem("IATA")
+  val iataController = iataSystem.actorOf(Props(new IataController(iata)), "IataController")
 
 }
