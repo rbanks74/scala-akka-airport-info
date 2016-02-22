@@ -1,13 +1,13 @@
 import java.util.Calendar
 
-import akka.actor.{Props, ActorSystem}
+import actors.IataReceiver
+import akka.actor.{ActorSystem, Props}
 import play.api.libs.json.Json._
 import play.api.libs.json.{JsObject, JsString, Json}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 import scala.io.Source
-import actors.IataController
 
 
 object Main extends App {
@@ -34,6 +34,7 @@ object Main extends App {
   }
 
   val iataSystem = ActorSystem("IATA")
-  val iataController = iataSystem.actorOf(Props(new IataController(iata)), "IataController")
+  //val iataController = iataSystem.actorOf(Props(new IataController(iata)), "IataController")
+  val iataReceiver = iataSystem.actorOf(Props(new IataReceiver), "IataReceiver")
 
 }
