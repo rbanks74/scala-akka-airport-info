@@ -1,14 +1,12 @@
 package actors
 
-import java.util.Calendar
 import actors.IataController.Data
 import akka.actor.{Actor, ActorLogging, Status}
 import akka.pattern._
-import play.api.libs.json.Json
-import play.api.libs.json.{JsObject, JsString}
+import services.Download
+import services.ToJson.toJsonAndTransform
+
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-import scala.io.Source
 
 
 /**  Companion Object for Actor Messages  **/
@@ -22,28 +20,12 @@ class IataGetter(iata: String) extends Actor with ActorLogging {
   import IataGetter._
 
 
-  /** Function to go to the FAA website and download the content **/
-  def downloadPage: Future[String] = Future(Source.fromURL("http://services.faa.gov/airport/status/" + iata + "?format=application/json").mkString)
-
-
-  /** Function to transform the string content to a Json Object with only relevant data **/
-  def toJsonAndTransform(data: String): JsObject = {
-    val pageData = Json.parse(data)
-    val currentTimeStamp = Calendar.getInstance().getTime
-
-    val cleansedData = JsObject(Seq(
-      "iataCode" -> (pageData \ "IATA").get,
-      "state" -> (pageData \ "state").get,
-      "airportName" -> (pageData \ "name").get,
-      "status" -> (pageData \ "status").get,
-      "time" -> JsString(currentTimeStamp.toString)
-    ))
-    cleansedData
-  }
+  /** Adding layer to stub out the data for testing **/
+  def downloadClient = Download.downloadPage(iata)
 
 
   /** Pipe down the original content into the actor for processing **/
-  pipe(downloadPage) to self
+  pipe(downloadClient) to self
 
 
   /** Function to catch any errors during Actor processing **/

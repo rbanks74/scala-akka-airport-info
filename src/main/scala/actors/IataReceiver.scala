@@ -24,11 +24,13 @@ class IataReceiver extends Actor with ActorLogging {
 
   pipe(getIataList) to self
 
+  /** Create overridable factory method to stub out creation and behavior of IataController Actor for testing **/
+  def controllerProps(stringList: List[String]): Props = Props(new IataController(stringList))
 
   def receive = {
 
     /** After successfully getting the List of Iata codes, create and pass the code list to the IataController **/
-    case iataCodeList: List[String] => context.actorOf(Props(new IataController(iataCodeList)), "IataController")
+    case iataCodeList: List[String] => context.actorOf(controllerProps(iataCodeList), "IataController")
 
     /** Print the results, placeholder for sending results elsewhere **/
     case DataReceived(results) => results.foreach(println(_))
