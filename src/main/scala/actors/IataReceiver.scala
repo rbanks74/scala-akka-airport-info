@@ -1,41 +1,45 @@
 package actors
 
-import akka.actor.{Actor, ActorLogging, Props}
-import akka.pattern._
+import akka.actor.{Actor, ActorLogging, Stash}
 import play.api.libs.json.JsObject
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import services.IataProps.iataControllerProps
 
 /** Companion Object for Actor Messages **/
 object IataReceiver {
-  case class Done()
-  case class Failed()
+  case object Failed
   case class DataReceived(results: Set[JsObject])
+  case class ProcessIt(data: List[String])
+  case class Result(result: Set[JsObject])
 }
 
 /** Actor to get the Iata codes from somewhere..., and then create a Controller Actor to process the list **/
-class IataReceiver extends Actor with ActorLogging {
+class IataReceiver extends Actor with Stash with ActorLogging {
   import IataReceiver._
-  log.info("IataReceiverActor Started")
+  log.info("IataReceiverActor Started...")
 
-  /** Simulate getting the list of codes elsewhere **/
-  def getIataList = Future(List("PHL","RDU", "BWI", "JAX", "BOS", "DAL", "123"))
+  def receive = waiting
 
-  pipe(getIataList) to self
+  /** Create states for the Reception Actor **/
+  val waiting: Receive = {
+    case ProcessIt(data: List[String]) =>
+      context.actorOf(iataControllerProps(data))
+      context.become(running)
 
-  /** Create overridable factory method to stub out creation and behavior of IataController Actor for testing **/
-  def controllerProps(stringList: List[String]): Props = Props(new IataController(stringList))
+    case _ => log.info("Unknown case")
+  }
 
-  def receive = {
+  def running: Receive = {
+    case ProcessIt(iataCodeList: List[String]) =>
+      log.info("Please wait, IataReceiverActor in running state...")
+      stash()
 
-    /** After successfully getting the List of Iata codes, create and pass the code list to the IataController **/
-    case iataCodeList: List[String] => context.actorOf(controllerProps(iataCodeList), "IataController")
+    case DataReceived(results) =>
+      results.foreach(println(_)) //context.parent ! Result(results)
+      unstashAll()
+      context.become(waiting)
 
-    /** Print the results, placeholder for sending results elsewhere **/
-    case DataReceived(results) => results.foreach(println(_))
-
-    case Failed => println("failed")
-
+    case Failed =>
+      log.info("Error in running state.")
+      context.stop(self)
   }
 }

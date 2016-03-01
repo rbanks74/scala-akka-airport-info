@@ -2,10 +2,9 @@ package actors
 
 import actors.IataController.Data
 import akka.actor.{Actor, ActorLogging, Status}
-import akka.pattern._
 import services.Download
 import services.ToJson.toJsonAndTransform
-
+import akka.pattern._
 import scala.concurrent.ExecutionContext.Implicits.global
 
 
@@ -13,6 +12,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 object IataGetter {
   case class Failed()
   case class Done()
+  case class Start(code: String)
 }
 
 /** Actor to Download and Process each IATA code received and send result to the IataController **/

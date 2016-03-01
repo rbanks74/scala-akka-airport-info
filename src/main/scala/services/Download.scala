@@ -5,7 +5,7 @@ import scala.concurrent.Future
 import scala.io.Source
 
 trait DownloadClient {
-  def downloadPage(url: String): Future[String]
+  def downloadPage(iata: String): Future[String]
 }
 
 object Download extends DownloadClient {

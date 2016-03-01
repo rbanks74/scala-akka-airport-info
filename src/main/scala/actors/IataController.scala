@@ -1,8 +1,9 @@
 package actors
 
 import actors.IataReceiver.DataReceived
-import akka.actor.{Actor, ActorLogging, ActorRef, Props}
-import play.api.libs.json.JsObject
+import akka.actor.{Actor, ActorLogging, ActorRef}
+import play.api.libs.json.{Json, JsObject}
+import services.IataProps.iataGetterProps
 
 
 /** Companion Object for Actor Messages **/
@@ -24,7 +25,7 @@ class IataController(iataList: List[String]) extends Actor with ActorLogging {
 
 
   /** For each Iata Code, add the child actor to the children set, and use child actor to process each request for content **/
-  for (code <- iataList) yield children += context.actorOf(Props(new IataGetter(code)))
+  for (code <- iataList) yield children += context.actorOf(iataGetterProps(code))
 
 
   /** Handle the Failure cases **/
@@ -38,7 +39,7 @@ class IataController(iataList: List[String]) extends Actor with ActorLogging {
 
     /** Add the processed content to the iataReceived set **/
     case Data(data) =>
-      //println(Json.prettyPrint(data))
+      println(Json.prettyPrint(data))
       iataReceived += data
 
     /** To ensure all child actors are accounted for, and send the iataReceived set to the IataReceiver Actor when completed **/
@@ -46,8 +47,6 @@ class IataController(iataList: List[String]) extends Actor with ActorLogging {
       children -= sender
       if (children.isEmpty) context.parent ! DataReceived(iataReceived)
 
-    /** Failure Cases **/
-    //case _ => stop()
     case Failure => stop()
   }
 }
