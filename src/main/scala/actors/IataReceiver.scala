@@ -11,7 +11,7 @@ object IataReceiver {
   case object Failed
   case class DataReceived(results: Set[JsObject])
   case class ProcessIt(data: List[String])
-  case class Result(result: Set[JsObject])
+  case class Result(result: Set[JsObject]) //For main, one day maybe
 }
 
 /** Actor to get the Iata codes from somewhere..., and then create a Controller Actor to process the list **/

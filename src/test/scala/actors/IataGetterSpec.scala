@@ -13,7 +13,7 @@ class IataGetterSpec extends TestKit(ActorSystem("IataGetterSpec")) with Implici
   }
 
   "An IataGetter" should {
-    "send the data and a done response to the IataController" in {
+    "send the Data and a Done response to the IataController" in {
       val proxy = TestProbe()
       val parent: ActorRef = system.actorOf(Props(new Actor {
         val child = context.actorOf(iataGetterProps, "child")
@@ -22,7 +22,6 @@ class IataGetterSpec extends TestKit(ActorSystem("IataGetterSpec")) with Implici
           case x if sender() == child     => proxy.ref forward x
           case x                          => child forward x
         }
-
       }))
 
       proxy.send(parent, Process("IAD"))
@@ -42,7 +41,6 @@ class IataGetterSpec extends TestKit(ActorSystem("IataGetterSpec")) with Implici
           case x if sender() == child     => proxy.ref forward x
           case x                          => child forward x
         }
-
       }))
 
       proxy.send(parent, Process("123"))
