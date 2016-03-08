@@ -35,8 +35,7 @@ class IataGetter extends Actor with ActorLogging {
 
         case Success(content) =>
           log.info(s"{} Successfully Retrieved url content for $code.", self)
-          //toJsonAndTransform(content).map(x => Data(x))
-          context.parent ! toJsonAndTransform(content).map(x => Data(x))//
+          toJsonAndTransform(content).map(x => context.parent ! Data(x))
           stop()
 
         case Failure(e) =>

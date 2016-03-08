@@ -19,7 +19,7 @@ class ToJsonSpec extends FlatSpec {
 
 
   "ToJsonAndTransform" should "return a JSON Object" in {
-    assert(classOf[JsObject] == result.getClass)
+    assert(result.getClass == classOf[JsObject])
   }
 
   "ToJsonAndTransform" should "have the same fields as listed below" in {
