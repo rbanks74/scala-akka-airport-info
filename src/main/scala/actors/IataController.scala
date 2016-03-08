@@ -1,5 +1,6 @@
 package actors
 
+import actors.IataGetter.Process
 import actors.IataReceiver.DataReceived
 import akka.actor.{Actor, ActorLogging, ActorRef}
 import play.api.libs.json.{Json, JsObject}
@@ -10,22 +11,18 @@ import services.IataProps.iataGetterProps
 object IataController {
   case class Done()
   case class Failure()
-  case class Get(s: String)
-  case class Data(jsonData: JsObject)
+  case class Retrieve(s: List[String])
+  case class Data(t: JsObject)
 }
 
 
 /** Actor to receive the List of Iata codes to delegate to child actors, then gathers the results and sends them to the IataReceiver Actor **/
-class IataController(iataList: List[String]) extends Actor with ActorLogging {
+class IataController extends Actor with ActorLogging {
   import IataController._
 
-  log.info("IataControllerActor Started")
+  log.info("IataControllerActor beginning task...")
   var iataReceived: Set[JsObject] = Set.empty[JsObject]
   var children = Set.empty[ActorRef]
-
-
-  /** For each Iata Code, add the child actor to the children set, and use child actor to process each request for content **/
-  for (code <- iataList) yield children += context.actorOf(iataGetterProps(code))
 
 
   /** Handle the Failure cases **/
@@ -37,15 +34,25 @@ class IataController(iataList: List[String]) extends Actor with ActorLogging {
 
   def receive = {
 
+    case Retrieve(codeList: List[String]) =>
+      for (x <- codeList) yield {
+        var tempGetter = context.actorOf(iataGetterProps)
+        tempGetter ! Process(x)
+        children += tempGetter
+      }
+
     /** Add the processed content to the iataReceived set **/
     case Data(data) =>
-      println(Json.prettyPrint(data))
+      log.debug(Json.prettyPrint(data))
       iataReceived += data
 
     /** To ensure all child actors are accounted for, and send the iataReceived set to the IataReceiver Actor when completed **/
     case IataGetter.Done =>
       children -= sender
-      if (children.isEmpty) context.parent ! DataReceived(iataReceived)
+      if (children.isEmpty) {
+        context.parent ! DataReceived(iataReceived)
+        context.stop(self)
+      }
 
     case Failure => stop()
   }
