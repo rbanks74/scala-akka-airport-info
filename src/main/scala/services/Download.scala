@@ -12,5 +12,4 @@ object Download extends DownloadClient {
 
   /** Function to go to the FAA website and download the content **/
   def downloadPage(iata: String) = Future(Source.fromURL("http://services.faa.gov/airport/status/" + iata + "?format=application/json").mkString)
-
 }
