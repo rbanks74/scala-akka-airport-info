@@ -7,6 +7,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
+
 /** Program to retrieve the airport statuses from the FAA web feed **/
 object Main extends App {
 
@@ -27,4 +28,24 @@ object Main extends App {
       case Failure(e) =>
        println(s"Error retrieving Data, message: $e")
   })
+
+
+  /** Looking into Mongo Integration Here
+  val mongoClient = MongoClient("localhost", 27017)
+  val db = mongoClient("AirportDB")
+  println(db.collectionNames())
+
+  val doc1 = MongoDBObject("id" -> 1, "name" -> "Bill")
+  val doc2 = MongoDBObject("id" -> 2, "name" -> "Charlie")
+  val coll = db("AirportTestCollection")
+  coll.insert(doc1)
+  coll.insert(doc2)
+  println(coll.count())
+  coll.drop()
+
+
+  mongoClient.close()
+
+  **/
+
 }

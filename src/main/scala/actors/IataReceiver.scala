@@ -2,7 +2,10 @@ package actors
 
 import actors.IataController.Retrieve
 import akka.actor.{Actor, ActorLogging, Stash}
+import argonaut.Argonaut._
 import play.api.libs.json.JsObject
+import repos.IRecord
+import repos.JsonConversionImplicits._
 import services.IataProps.iataControllerProps
 
 
@@ -36,8 +39,13 @@ class IataReceiver extends Actor with Stash with ActorLogging {
       log.info("Please wait, IataReceiverActor in running state...")
       stash()
 
+    /** After receiving Json data transform it into an IRecord Instance **/
     case DataReceived(results) =>
-      results.foreach(println(_)) //context.parent ! Result(results) send these somewhere, maybe to DB
+      //results.foreach(println(_)) //context.parent ! Result(results) send these somewhere, maybe to DB
+
+      val IRecordSet = results.map(_.toString().decodeOption[IRecord].get)
+      IRecordSet.foreach(println(_))
+
       unstashAll()
       context.become(waiting)
 
