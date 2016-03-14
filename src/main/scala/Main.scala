@@ -6,13 +6,15 @@ import com.typesafe.config.ConfigFactory
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
+import com.typesafe.scalalogging._
 
 
 /** Program to retrieve the airport statuses from the FAA web feed **/
-object Main extends App {
+object Main extends App with LazyLogging {
 
   implicit val config = ConfigFactory.load()
 
+  logger.debug("Getting IATA codes for data retrieval")
   /** Simulate getting the list of codes elsewhere **/
   def getIataList = Future(List("PHL","RDU", "BWI", "JAX", "BOS", "DAL", "123"))
   def getIataList2 = Future(List("ACK", "ACT"))

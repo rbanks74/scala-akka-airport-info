@@ -22,13 +22,12 @@ class IataDBTest extends Actor with ActorLogging {
     case SerializeToDB(sj) =>
       log.info("dbActor starting...")
 
-      // From set of Json objects to set of IRecord Instances
-      val newIRecordSet: Set[IRecord] = sj.map(j => j.toString().decodeOption[IRecord].get)
+      // From set of Json objects to set of IRecord Instances, uses Argonaut
+      val newIRecordSet: Set[IRecord] = sj.map(jsOb => jsOb.toString().decodeOption[IRecord].get)
 
-      // From set of IRecord Instances to set of MongoDB Objects
+      // From set of IRecord Instances to set of MongoDB Objects, uses salat
       val newDBObjects: Set[DBObject] = newIRecordSet.map(x => grater[IRecord]asDBObject x)
       newDBObjects.foreach(println(_))
 
   }
-
 }
