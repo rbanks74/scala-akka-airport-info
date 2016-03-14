@@ -38,6 +38,7 @@ class IataReceiver extends Actor with Stash with ActorLogging {
 
     /** After receiving Json data, as JsObjects, transform them into an IRecord Instances **/
     case DataReceived(results) =>
+      log.info("receiver has results now!")
       //results.foreach(println(_)) //context.parent ! Result(results) send these somewhere, maybe to DB
 
       val dbActor = context.actorOf(Props(new IataDBTest))

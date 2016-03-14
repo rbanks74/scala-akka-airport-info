@@ -1,9 +1,7 @@
 package services
 
 import java.util.Calendar
-
 import play.api.libs.json.{JsObject, JsString, Json}
-
 import scala.util.Try
 
 
@@ -14,7 +12,7 @@ object ToJson {
     val pageData = Json.parse(data)
     val currentTimeStamp = Calendar.getInstance().getTime
 
-    val cleansedData = JsObject(Seq(
+    val cleansedData: JsObject = JsObject(Seq(
       "iataCode" -> (pageData \ "IATA").get,
       "state" -> (pageData \ "state").get,
       "airportName" -> (pageData \ "name").get,

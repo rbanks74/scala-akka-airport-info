@@ -2,12 +2,16 @@ package repos
 
 import argonaut.Argonaut._
 import argonaut._
+import com.mongodb.casbah.Imports._
 
 
 /** Implicits to convert JSON data into IRecord and Status case classes **/
 object JsonConversionImplicits {
 
-  implicit def IRecordDecodeJson: DecodeJson[IRecord] =
+  implicit def IRecordDecodeJson: DecodeJson[IRecord] = {
+
+    val id = new ObjectId
+
     DecodeJson(c => for {
       iataCode <- (c --\ "iataCode").as[String]
       state <- (c --\ "state").as[String]
@@ -15,7 +19,8 @@ object JsonConversionImplicits {
       status <- (c --\ "status").as[Status]
       time <- (c --\ "time").as[String]
 
-    } yield IRecord(iataCode, state, airportName, status, time))
+    } yield IRecord(id, iataCode, state, airportName, status, time))
+  }
 
   implicit def StatusDecodeJson: DecodeJson[Status] =
     DecodeJson(c => for {
