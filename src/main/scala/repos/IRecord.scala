@@ -12,6 +12,14 @@ case class IRecord(
   time: String
 )
 
+/**
+object IRecord extends ModelCompanion[IRecord, ObjectId] {
+  val db: MongoDB = MongoClient("localhost")("iatas")
+  val coll: MongoCollection = db.apply("iataTable")
+  val dao = new SalatDAO[IRecord, ObjectId](collection = coll) {}
+}
+**/
+
 case class Status(
   reason: Option[String],
   closureBegin: Option[String],

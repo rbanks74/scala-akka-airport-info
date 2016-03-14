@@ -1,8 +1,8 @@
 package repos
 
-import com.mongodb.casbah.MongoConnection
+import com.mongodb.casbah._
 import com.novus.salat.dao.SalatDAO
 import com.novus.salat.global._
 import com.mongodb.casbah.Imports.ObjectId
 
-class IataDAO extends SalatDAO[IRecord, ObjectId](collection = MongoConnection()("IataTest")("Iatas"))
+object IataDAO extends SalatDAO[IRecord, ObjectId](collection = MongoClient("localhost")("IataTest").apply("Iatas"))
