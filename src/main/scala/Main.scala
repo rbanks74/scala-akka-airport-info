@@ -13,23 +13,35 @@ import com.typesafe.scalalogging._
 object Main extends App with LazyLogging {
 
   implicit val config = ConfigFactory.load()
-
   logger.debug("Getting IATA codes for data retrieval")
+
+
   /** Simulate getting the list of codes elsewhere **/
   def getIataList = Future(List("PHL","RDU", "BWI", "JAX", "BOS", "DAL", "123"))
   def getIataList2 = Future(List("ACK", "ACT"))
   def getIataList3 = Future(List("ABE", "DOV", "ACY", "DFW"))
   def combined = List(getIataList, getIataList2, getIataList3)
 
+
   val iataSystem = ActorSystem("IATA")
   val iataReceiver = iataSystem.actorOf(Props(new IataReceiver), "IataReceiver")
+
 
   combined foreach (_ onComplete {
       case Success(iataList) =>
         iataReceiver ! ProcessIt(iataList)
       case Failure(e) =>
-       println(s"Error retrieving Data, message: $e")
+        logger.error(s"Error retrieving Data, message: $e")
   })
+
+
+
+
+
+
+
+
+
 
 
   /** Looking into Mongo Integration Here
