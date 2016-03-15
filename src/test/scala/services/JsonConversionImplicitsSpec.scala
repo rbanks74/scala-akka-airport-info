@@ -3,7 +3,7 @@ package services
 import argonaut.Argonaut._
 import org.scalatest.FlatSpec
 import play.api.libs.json.JsObject
-import repos.IRecord
+import repos.{Status, IRecord}
 import services.JsonConversionImplicits.IRecordDecodeJson
 import services.ToJson._
 
@@ -17,7 +17,11 @@ class JsonConversionImplicitsSpec extends FlatSpec {
   val result: JsObject = tryResult.get
   val toIRecord = result.toString().decodeOption[IRecord].get
 
-  "JsonConversionImplicits" should "return a IRecord Instance" in {
+  "JsonConversionImplicits" should "return an IRecord Instance" in {
     assert(toIRecord.getClass == classOf[IRecord])
+  }
+
+  "JsonConversionImplicits" should "also return an IRecord instance that contains a Status Instance" in {
+    assert(toIRecord.status.isInstanceOf[Status])
   }
 }
