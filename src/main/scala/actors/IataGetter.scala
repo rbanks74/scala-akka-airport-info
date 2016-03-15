@@ -1,7 +1,7 @@
 package actors
 
 import actors.IataController.Data
-import akka.actor.{Actor, ActorLogging, Status}
+import akka.actor.{Actor, ActorLogging}
 import services.Download
 import services.ToJson.toJsonAndTransform
 
@@ -46,6 +46,6 @@ class IataGetter extends Actor with ActorLogging {
 
     /** Failure Cases **/
     case Failed => stop()
-    case _: Status.Failure => stop()
+    case _ => stop()
   }
 }
