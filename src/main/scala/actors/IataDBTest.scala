@@ -8,7 +8,8 @@ import com.novus.salat._
 import com.novus.salat.global._
 import play.api.libs.json.JsObject
 import repos.IRecord
-import repos.JsonConversionImplicits.IRecordDecodeJson
+import services.JsonConversionImplicits
+import JsonConversionImplicits.IRecordDecodeJson
 
 
 object IataDBTest {

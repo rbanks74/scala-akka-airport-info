@@ -1,9 +1,8 @@
-package repos
+package services
 
-import argonaut.Argonaut._
-import argonaut._
-import com.mongodb.casbah.Imports._
-
+import argonaut.DecodeJson
+import org.bson.types.ObjectId
+import repos.{IRecord, Status}
 
 /** Implicits to convert JSON data into IRecord and Status case classes **/
 object JsonConversionImplicits {
