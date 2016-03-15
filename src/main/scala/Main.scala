@@ -44,8 +44,7 @@ object Main extends App with LazyLogging {
   coll.insert(doc2)
   println(coll.count())
   coll.drop()
-
-
+    
   mongoClient.close()
 
   **/
