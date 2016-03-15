@@ -29,5 +29,7 @@ class IataDBTest extends Actor with ActorLogging {
       val newDBObjects: Set[DBObject] = newIRecordSet.map(x => grater[IRecord]asDBObject x)
       newDBObjects.foreach(println(_))
 
+      context.stop(self)
+
   }
 }
