@@ -1,10 +1,10 @@
 package repos
 
-import com.mongodb.casbah.Imports._
+import com.mongodb.casbah.Imports.ObjectId
 
 /** Case Classes to pass data into DB **/
 case class IRecord(
-  id: ObjectId,
+  _id: ObjectId,
   iataCode: String,
   state: String,
   airportName: String,
@@ -30,4 +30,13 @@ case class Status(
   closureEnd: Option[String],
   trend: Option[String],
   sType: Option[String]
+)
+
+case class IRecordQueryParams(
+  _id: Option[ObjectId] = None,
+  iataCode: Option[String] = None,
+  state: Option[String] = None,
+  airportName: Option[String] = None,
+  status: Option[Status] = None,
+  time: Option[String] = None
 )

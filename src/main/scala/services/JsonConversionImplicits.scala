@@ -9,7 +9,7 @@ object JsonConversionImplicits {
 
   implicit def IRecordDecodeJson: DecodeJson[IRecord] = {
 
-    val id = new ObjectId
+    val _id = new ObjectId
 
     DecodeJson(c => for {
       iataCode <- (c --\ "iataCode").as[String]
@@ -18,7 +18,7 @@ object JsonConversionImplicits {
       status <- (c --\ "status").as[Status]
       time <- (c --\ "time").as[String]
 
-    } yield IRecord(id, iataCode, state, airportName, status, time))
+    } yield IRecord(_id, iataCode, state, airportName, status, time))
   }
 
   implicit def StatusDecodeJson: DecodeJson[Status] =

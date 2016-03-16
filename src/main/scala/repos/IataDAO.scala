@@ -1,8 +1,21 @@
 package repos
 
+import com.mongodb.DBObject
+import com.mongodb.casbah.Imports.ObjectId
 import com.mongodb.casbah._
+import com.novus.salat._
 import com.novus.salat.dao.SalatDAO
 import com.novus.salat.global._
-import com.mongodb.casbah.Imports.ObjectId
 
-object IataDAO extends SalatDAO[IRecord, ObjectId](collection = MongoClient("localhost")("IataTest").apply("Iatas"))
+import scala.language.implicitConversions
+
+class IataDAO extends SalatDAO[IRecord, ObjectId](collection = MongoClient("localhost")("IataTest").apply("Iatas"))
+
+
+object otherImplicitConversions {
+  implicit def paramsToDBObject(params: IRecordQueryParams): DBObject =
+    grater[IRecordQueryParams].asDBObject(params)
+
+  implicit def iRecordToDBObject(i: IRecord): DBObject =
+    grater[IRecord].asDBObject(i)
+}

@@ -2,11 +2,10 @@ import actors.IataReceiver
 import actors.IataReceiver.ProcessIt
 import akka.actor.{ActorSystem, Props}
 import com.typesafe.config.ConfigFactory
-
+import com.typesafe.scalalogging._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
-import com.typesafe.scalalogging._
 
 
 /** Program to retrieve the airport statuses from the FAA web feed **/
