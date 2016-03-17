@@ -9,7 +9,7 @@ import services.IataProps.iataControllerProps
 /** Companion Object for Actor Messages **/
 object IataReceiver {
   case object Failed
-  case class ActorRefSet(refs: ActorRefHolder)
+  case class ActorPathSet(paths: ActorPathHolder)
   case class DataReceived(results: Set[JsObject])
   case class ProcessIt(data: List[String])
   case class Result(result: Set[JsObject]) //For main, one day maybe
@@ -32,8 +32,8 @@ class IataReceiver extends Actor with Stash with ActorLogging {
       tempController ! Retrieve(data)
       context.become(running)
 
-    case ActorRefSet(refs) =>
-      dbActorPath = refs.refMap.get("dbActorPath").get
+    case ActorPathSet(paths: ActorPathHolder) =>
+      dbActorPath = paths.refMap.get("dbActorPath").get
 
     case _ => log.info("Unknown case")
   }
@@ -59,4 +59,4 @@ class IataReceiver extends Actor with Stash with ActorLogging {
 }
 
 /** Case Class to hold the ActorPath's for specified Actors **/
-case class ActorRefHolder(refMap: Map[String, ActorPath])
+case class ActorPathHolder(refMap: Map[String, ActorPath])
