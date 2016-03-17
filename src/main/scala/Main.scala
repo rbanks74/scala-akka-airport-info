@@ -1,8 +1,9 @@
-import actors.IataReceiver
-import actors.IataReceiver.ProcessIt
+import actors.IataReceiver.{ActorRefSet, ProcessIt}
+import actors.{ActorRefHolder, IataDBTest, IataReceiver}
 import akka.actor.{ActorSystem, Props}
 import com.typesafe.config.ConfigFactory
 import com.typesafe.scalalogging._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
@@ -24,7 +25,11 @@ object Main extends App with LazyLogging {
 
   val iataSystem = ActorSystem("IATA")
   val iataReceiver = iataSystem.actorOf(Props(new IataReceiver), "IataReceiver")
+  val dbActor = iataSystem.actorOf(Props(new IataDBTest), "IataDBTest")
 
+
+  val actorRefs: ActorRefHolder = new ActorRefHolder(Map("dbActorPath" -> dbActor.path, "receiverActorPath" -> iataReceiver.path))
+  iataReceiver ! ActorRefSet(actorRefs)
 
   combined foreach (_ onComplete {
       case Success(iataList) =>
@@ -34,28 +39,11 @@ object Main extends App with LazyLogging {
   })
 
 
-
-
-
-
-
-
-
-
-
-  /** Looking into Mongo Integration Here
-  val mongoClient = MongoClient("localhost", 27017)
-  val db = mongoClient("AirportDB")
-  println(db.collectionNames())
-
-  val doc1 = MongoDBObject("id" -> 1, "name" -> "Bill")
-  val doc2 = MongoDBObject("id" -> 2, "name" -> "Charlie")
-  val coll = db("AirportTestCollection")
-  coll.insert(doc1)
-  coll.insert(doc2)
-  println(coll.count())
-  coll.drop()
-  mongoClient.close()
-  **/
+  sys.addShutdownHook {
+    iataSystem.log.info("Shutting down")
+    iataSystem.shutdown()
+    iataSystem.awaitTermination()
+    logger.info(s"Actor system '${iataSystem.name}' successfully shut down")
+  }
 
 }

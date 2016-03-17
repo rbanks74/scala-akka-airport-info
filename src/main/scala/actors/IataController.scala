@@ -20,7 +20,7 @@ object IataController {
 class IataController extends Actor with ActorLogging {
   import IataController._
 
-  log.info("IataControllerActor beginning task...")
+  log.debug("IataControllerActor beginning task...")
   var iataReceived: Set[JsObject] = Set.empty[JsObject]
   var children = Set.empty[ActorRef]
 
