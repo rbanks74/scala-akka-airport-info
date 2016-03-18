@@ -8,7 +8,6 @@ class Settings(val config: Config) {
   import airportSettings._
 
   val logLevel = getString("airportStatusApp.akka.loglevel")
-  println(logLevel)
 
 }
 

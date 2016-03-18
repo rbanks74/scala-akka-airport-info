@@ -8,31 +8,26 @@ import play.api.libs.json.JsObject
 /** Companion Object for Actor Messages **/
 object IataReceiver {
   case object Failed
-  case class ActorPathSet(paths: ActorPathHolder)
   case class DataReceived(results: Set[JsObject])
   case class ProcessIt(data: List[String])
-  def props: Props = Props(new IataReceiver)
+  def props(dbActorPath: ActorPath): Props = Props(new IataReceiver(dbActorPath))
 }
 
 /** Actor to get the Iata codes from somewhere..., and then create a Controller Actor to process the list **/
-class IataReceiver extends Actor with Stash with ActorLogging {
+class IataReceiver(dbPath: ActorPath) extends Actor with Stash with ActorLogging {
   import IataReceiver._
 
   log.debug("IataReceiverActor beginning task...")
-  var dbActorPath: ActorPath = self.path
-
   def receive = waiting
 
 
   /** Waiting state for the Reception Actor **/
   val waiting: Receive = {
+
     case ProcessIt(data: List[String]) =>
       val tempController = context.actorOf(IataController.props)
       tempController ! Retrieve(data)
       context.become(running)
-
-    case ActorPathSet(paths: ActorPathHolder) =>
-      dbActorPath = paths.refMap.get("dbActorPath").get
 
     case _ => log.info("Unknown case")
   }
@@ -45,8 +40,7 @@ class IataReceiver extends Actor with Stash with ActorLogging {
 
     /** After receiving Json data, as JsObjects, send them to IataDBTest Actor **/
     case DataReceived(results) =>
-      context.actorSelection(dbActorPath) ! SerializeToDB(results)
-
+      context.actorSelection(dbPath) ! SerializeToDB(results)
       unstashAll()
       context.become(waiting)
 
@@ -54,8 +48,4 @@ class IataReceiver extends Actor with Stash with ActorLogging {
       log.error("Error in running state.")
       context.stop(self)
   }
-
 }
-
-/** Case Class to hold the ActorPath's for specified Actors **/
-case class ActorPathHolder(refMap: Map[String, ActorPath])
