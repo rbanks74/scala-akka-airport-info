@@ -4,7 +4,7 @@ import actors.IataGetter.{Failed, Process}
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import akka.testkit.{ImplicitSender, TestKit, TestProbe}
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
-import services.IataProps.iataGetterProps
+
 
 class IataGetterSpec extends TestKit(ActorSystem("IataGetterSpec")) with ImplicitSender with WordSpecLike with Matchers with BeforeAndAfterAll {
 
@@ -16,7 +16,7 @@ class IataGetterSpec extends TestKit(ActorSystem("IataGetterSpec")) with Implici
     "send the Data and a Done response to the IataController" in {
       val proxy = TestProbe()
       val parent: ActorRef = system.actorOf(Props(new Actor {
-        val child = context.actorOf(iataGetterProps, "child")
+        val child = context.actorOf(IataGetter.props, "child")
 
         def receive = {
           case x if sender() == child     => proxy.ref forward x
@@ -35,7 +35,7 @@ class IataGetterSpec extends TestKit(ActorSystem("IataGetterSpec")) with Implici
 
       val proxy = TestProbe()
       val parent: ActorRef = system.actorOf(Props(new Actor {
-        val child = context.actorOf(iataGetterProps, "child")
+        val child = context.actorOf(IataGetter.props, "child")
 
         def receive = {
           case x if sender() == child     => proxy.ref forward x
@@ -53,7 +53,7 @@ class IataGetterSpec extends TestKit(ActorSystem("IataGetterSpec")) with Implici
 
       val proxy = TestProbe()
       val parent: ActorRef = system.actorOf(Props(new Actor {
-        val child = context.actorOf(iataGetterProps, "child")
+        val child = context.actorOf(IataGetter.props, "child")
 
         def receive = {
           case x if sender() == child     => proxy.ref forward x
@@ -71,7 +71,7 @@ class IataGetterSpec extends TestKit(ActorSystem("IataGetterSpec")) with Implici
 
       val proxy = TestProbe()
       val parent: ActorRef = system.actorOf(Props(new Actor {
-        val child = context.actorOf(iataGetterProps, "child")
+        val child = context.actorOf(IataGetter.props, "child")
 
         def receive = {
           case x if sender() == child     => proxy.ref forward x

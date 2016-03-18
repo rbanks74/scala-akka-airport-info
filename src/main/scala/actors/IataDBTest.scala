@@ -1,6 +1,6 @@
 package actors
 
-import akka.actor.{Actor, ActorLogging, Status}
+import akka.actor.{Props, Actor, ActorLogging, Status}
 import argonaut.Argonaut._
 import com.mongodb.WriteConcern
 import play.api.libs.json.JsObject
@@ -14,6 +14,7 @@ import com.mongodb.casbah.Imports._
 
 object IataDBTest {
   case class SerializeToDB(sj: Set[JsObject])
+  def props: Props = Props(new IataDBTest)
 }
 
 class IataDBTest extends Actor with ActorLogging {

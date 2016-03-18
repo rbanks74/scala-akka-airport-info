@@ -2,9 +2,8 @@ package actors
 
 import actors.IataGetter.Process
 import actors.IataReceiver.DataReceived
-import akka.actor.{Actor, ActorLogging, ActorRef}
-import play.api.libs.json.{Json, JsObject}
-import services.IataProps.iataGetterProps
+import akka.actor.{Actor, ActorLogging, ActorRef, Props}
+import play.api.libs.json.{JsObject, Json}
 
 
 /** Companion Object for Actor Messages **/
@@ -13,6 +12,7 @@ object IataController {
   case class Failure()
   case class Retrieve(s: List[String])
   case class Data(t: JsObject)
+  def props: Props = Props(new IataController)
 }
 
 
@@ -36,7 +36,7 @@ class IataController extends Actor with ActorLogging {
 
     case Retrieve(codeList: List[String]) =>
       for (x <- codeList) yield {
-        var tempGetter = context.actorOf(iataGetterProps)
+        var tempGetter = context.actorOf(IataGetter.props)
         tempGetter ! Process(x)
         children += tempGetter
       }

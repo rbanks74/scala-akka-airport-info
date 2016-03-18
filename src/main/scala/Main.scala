@@ -1,6 +1,6 @@
 import actors.IataReceiver.{ActorPathSet, ProcessIt}
-import actors.{ActorPathHolder, IataDBTest, IataReceiver}
-import akka.actor.{ActorSystem, Props}
+import actors.{IataDBTest, ActorPathHolder, IataReceiver}
+import akka.actor.ActorSystem
 import com.typesafe.config.ConfigFactory
 import com.typesafe.scalalogging._
 
@@ -24,8 +24,8 @@ object Main extends App with LazyLogging {
 
 
   val iataSystem = ActorSystem("IATA")
-  val iataReceiver = iataSystem.actorOf(Props(new IataReceiver), "IataReceiver")
-  val dbActor = iataSystem.actorOf(Props(new IataDBTest), "IataDBTest")
+  val iataReceiver = iataSystem.actorOf(IataReceiver.props, "IataReceiver")
+  val dbActor = iataSystem.actorOf(IataDBTest.props, "IataDBTest")
 
 
   val actorRefs: ActorPathHolder = new ActorPathHolder(Map("dbActorPath" -> dbActor.path, "receiverActorPath" -> iataReceiver.path))

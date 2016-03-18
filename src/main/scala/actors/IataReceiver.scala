@@ -4,7 +4,6 @@ import actors.IataController.Retrieve
 import actors.IataDBTest.SerializeToDB
 import akka.actor._
 import play.api.libs.json.JsObject
-import services.IataProps.iataControllerProps
 
 /** Companion Object for Actor Messages **/
 object IataReceiver {
@@ -12,7 +11,7 @@ object IataReceiver {
   case class ActorPathSet(paths: ActorPathHolder)
   case class DataReceived(results: Set[JsObject])
   case class ProcessIt(data: List[String])
-  case class Result(result: Set[JsObject]) //For main, one day maybe
+  def props: Props = Props(new IataReceiver)
 }
 
 /** Actor to get the Iata codes from somewhere..., and then create a Controller Actor to process the list **/
@@ -28,7 +27,7 @@ class IataReceiver extends Actor with Stash with ActorLogging {
   /** Waiting state for the Reception Actor **/
   val waiting: Receive = {
     case ProcessIt(data: List[String]) =>
-      val tempController = context.actorOf(iataControllerProps)
+      val tempController = context.actorOf(IataController.props)
       tempController ! Retrieve(data)
       context.become(running)
 

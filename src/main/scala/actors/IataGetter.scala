@@ -1,7 +1,7 @@
 package actors
 
 import actors.IataController.Data
-import akka.actor.{Actor, ActorLogging}
+import akka.actor.{Props, Actor, ActorLogging}
 import services.Download
 import services.ToJson.toJsonAndTransform
 
@@ -14,6 +14,7 @@ object IataGetter {
   case class Process(code: String)
   case class Failed()
   case class Done()
+  def props: Props = Props(new IataGetter)
 }
 
 /** Actor to Download and Process each IATA code received and send result to the IataController **/
