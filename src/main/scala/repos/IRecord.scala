@@ -29,13 +29,7 @@ case class IRecord(
   time: String
 )
 
-/**
-object IRecord extends ModelCompanion[IRecord, ObjectId] {
-  val db: MongoDB = MongoClient("localhost")("iatas")
-  val coll: MongoCollection = db.apply("iataTable")
-  val dao = new SalatDAO[IRecord, ObjectId](collection = coll) {}
-}
-**/
+
 object Status {
 
   implicit def StatusDecodeJson: DecodeJson[Status] =
@@ -53,6 +47,7 @@ object Status {
 
     } yield Status(reason, closureBegin, endTime, minDelay, avgDelay, maxDelay, closureEnd, trend, sType))
 }
+
 case class Status(
   reason: Option[String],
   closureBegin: Option[String],
@@ -63,13 +58,4 @@ case class Status(
   closureEnd: Option[String],
   trend: Option[String],
   sType: Option[String]
-)
-
-case class IRecordQueryParams(
-  _id: Option[ObjectId] = None,
-  iataCode: Option[String] = None,
-  state: Option[String] = None,
-  airportName: Option[String] = None,
-  status: Option[Status] = None,
-  time: Option[String] = None
 )
