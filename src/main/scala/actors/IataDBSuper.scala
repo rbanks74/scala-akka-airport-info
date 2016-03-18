@@ -12,13 +12,13 @@ import scala.util.Try
 import com.mongodb.casbah.Imports._
 
 
-object IataDBTest {
+object IataDBSuper {
   case class SerializeToDB(sj: Set[JsObject])
-  def props: Props = Props(new IataDBTest)
+  def props: Props = Props(new IataDBSuper)
 }
 
-class IataDBTest extends Actor with ActorLogging {
-  import IataDBTest._
+class IataDBSuper extends Actor with ActorLogging {
+  import IataDBSuper._
 
   val dao = new IataDAO
   val wc = WriteConcern.UNACKNOWLEDGED
@@ -38,7 +38,7 @@ class IataDBTest extends Actor with ActorLogging {
       newDBObjects.foreach(println(_))
 
     case Status.Failure(e) =>
-      log.error(s"Error found in IataDBTest Actor:$e")
+      log.error(s"Error found in IataDBSuper Actor:$e")
       context.stop(self)
 
     case _ =>

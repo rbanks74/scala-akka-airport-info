@@ -1,7 +1,7 @@
 package actors
 
 import actors.IataController.Retrieve
-import actors.IataDBTest.SerializeToDB
+import actors.IataDBSuper.SerializeToDB
 import akka.actor._
 import play.api.libs.json.JsObject
 
