@@ -7,7 +7,6 @@ import play.api.libs.json.JsObject
 import repos.{IRecord, IataDAO}
 import com.novus.salat._
 import com.novus.salat.global._
-import services.JsonConversionImplicits.IRecordDecodeJson
 import scala.util.Try
 import com.mongodb.casbah.Imports._
 

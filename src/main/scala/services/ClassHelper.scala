@@ -2,7 +2,6 @@ package services
 
 import argonaut.Argonaut._
 import repos.{IRecord, Status}
-import services.JsonConversionImplicits.IRecordDecodeJson
 import services.ToJson._
 
 

@@ -4,9 +4,7 @@ import argonaut.Argonaut._
 import org.scalatest.FlatSpec
 import play.api.libs.json.JsObject
 import repos.{Status, IRecord}
-import services.JsonConversionImplicits.IRecordDecodeJson
 import services.ToJson._
-
 import scala.util.Try
 
 
