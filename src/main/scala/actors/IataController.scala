@@ -8,8 +8,8 @@ import play.api.libs.json.{JsObject, Json}
 
 /** Companion Object for Actor Messages **/
 object IataController {
-  case class Done()
-  case class Failure()
+  case object Done
+  case object Failure
   case class Retrieve(s: List[String])
   case class Data(t: JsObject)
   def props: Props = Props(new IataController)

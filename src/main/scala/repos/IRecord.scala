@@ -2,12 +2,14 @@ package repos
 
 import argonaut.DecodeJson
 import com.mongodb.casbah.Imports.ObjectId
+import reactivemongo.bson.{BSONDocumentReader, BSONObjectID, BSONDocument, BSONDocumentWriter}
 
-/** Case Classes to pass data into DB **/
+
 object IRecord {
   implicit def IRecordDecodeJson: DecodeJson[IRecord] = {
 
     val _id = new ObjectId
+    val _id2 = BSONObjectID
 
     DecodeJson(c => for {
       iataCode <- (c --\ "iataCode").as[String]
@@ -16,12 +18,33 @@ object IRecord {
       status <- (c --\ "status").as[Status]
       time <- (c --\ "time").as[String]
 
-    } yield IRecord(_id, iataCode, state, airportName, status, time))
+    } yield IRecord(_id2.generate, iataCode, state, airportName, status, time))
   }
+
+  implicit object IRecordBSONRead extends BSONDocumentReader[IRecord] {
+    def read(b: BSONDocument): IRecord =
+      
+  }
+
+  implicit object IRecordBSONWriter extends BSONDocumentWriter[IRecord] {
+    def write(i: IRecord): BSONDocument =
+      BSONDocument(
+      "_id" -> i._id,
+      "iataCode" -> i.iataCode,
+      "state" -> i.state,
+      "airportName" -> i.airportName,
+      "status" -> i.status,
+      "time" -> i.time
+      )
+  }
+
+
+
+
 }
 
 case class IRecord(
-  _id: ObjectId,
+  _id: BSONObjectID,
   iataCode: String,
   state: String,
   airportName: String,
