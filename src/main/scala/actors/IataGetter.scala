@@ -12,8 +12,8 @@ import scala.util.{Failure, Success}
 /**  Companion Object for Actor Messages  **/
 object IataGetter {
   case class Process(code: String)
-  case class Failed()
-  case class Done()
+  case object Failed
+  case object Done
   def props: Props = Props(new IataGetter)
 }
 

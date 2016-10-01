@@ -13,9 +13,6 @@ class IataDAO extends SalatDAO[IRecord, ObjectId](collection = MongoClient("loca
 
 
 object otherImplicitConversions {
-  implicit def paramsToDBObject(params: IRecordQueryParams): DBObject =
-    grater[IRecordQueryParams].asDBObject(params)
-
   implicit def iRecordToDBObject(i: IRecord): DBObject =
     grater[IRecord].asDBObject(i)
 }
