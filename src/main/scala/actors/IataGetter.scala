@@ -36,7 +36,7 @@ class IataGetter extends Actor with ActorLogging {
       Download.downloadPage(code).onComplete {
 
         case Success(content) =>
-          log.info(s"{} Successfully Retrieved url content for $code.", self)
+          log.info(s"{} Successfully Retrieved url content for {}.", self, code)
           toJsonAndTransform(content).map(ob => context.parent ! Data(ob))
           stop()
 
