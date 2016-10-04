@@ -9,6 +9,7 @@
 
 To Do List:    
     
+    Determine the End Goal of this project
     Create a RESTFul Service to perform CRUD ops against a DB with IRecords.
     Change the Aggregate model
     Modify the way implicits are handled
