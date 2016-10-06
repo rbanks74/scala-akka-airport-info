@@ -27,7 +27,8 @@ libraryDependencies ++= Seq(
   "org.mongodb" %% "casbah" % "3.1.1",
   "io.argonaut" %% "argonaut" % "6.1",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0",
-  "ch.qos.logback" % "logback-classic" % "1.1.2"
+  "ch.qos.logback" % "logback-classic" % "1.1.2",
+  "org.scalaz" %% "scalaz-core" % "7.2.6"
 )
 
 testOptions += Tests.Argument(TestFrameworks.JUnit, "-v")
